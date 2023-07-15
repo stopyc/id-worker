@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class IdWorkerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(IdWorkerApplication.class, args);
     }
-
 }
