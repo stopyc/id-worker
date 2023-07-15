@@ -89,7 +89,6 @@ public class Snowflake extends AbstractIdWorker {
      */
     private long lastTimestamp = -1L;
 
-    private long lastTimestampMaxSequence = 0L;
 
 
     @Override
@@ -110,6 +109,9 @@ public class Snowflake extends AbstractIdWorker {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+            } else if (offset < 100) {
+                //如果时钟回拨在100ms以内,那么就使用历史时间戳,直接用历史时间戳生成id
+                now = lastTimestamp;
             } else {
                 throw new RuntimeException("时间戳异常");
             }
@@ -120,12 +122,16 @@ public class Snowflake extends AbstractIdWorker {
             sequence = (sequence + 1) & sequenceMask;
             //如果溢出了(一般很难,因为对于1ms来说4095这个数字很大了)
             if (sequence == 0) {
+                //防止使用历史时间生成的id还溢出了.
+                long offset = lastTimestamp - now();
+                if (offset < 100) {
+                    throw new RuntimeException("时间戳异常");
+                }
                 now = tilNextMillis(lastTimestamp);
             }
         } else {
             //如果是新的一毫秒,那么序列号就是0
             sequence = 0;
-            lastTimestampMaxSequence = sequence;
         }
 
         lastTimestamp = now;
