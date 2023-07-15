@@ -89,6 +89,8 @@ public class Snowflake extends AbstractIdWorker {
      */
     private long lastTimestamp = -1L;
 
+    private long lastTimestampMaxSequence = 0L;
+
 
     @Override
     public long nextId() {
@@ -97,8 +99,17 @@ public class Snowflake extends AbstractIdWorker {
 
         //TODO:时钟回拨问题
         if (now < lastTimestamp) {
-            if (lastTimestamp - now < 5) {
-                now = tilNextMillis(lastTimestamp);
+            long offset = lastTimestamp - now;
+            if (offset < 5) {
+                try {
+                    wait(offset << 1);
+                    now = now();
+                    if (now < lastTimestamp) {
+                        throw new RuntimeException("时间戳异常");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 throw new RuntimeException("时间戳异常");
             }
@@ -114,6 +125,7 @@ public class Snowflake extends AbstractIdWorker {
         } else {
             //如果是新的一毫秒,那么序列号就是0
             sequence = 0;
+            lastTimestampMaxSequence = sequence;
         }
 
         lastTimestamp = now;
