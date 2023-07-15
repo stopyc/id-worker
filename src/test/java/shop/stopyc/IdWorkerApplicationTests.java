@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import shop.stopyc.strategy.IdFactory;
 import shop.stopyc.strategy.IdGenType.IdStrategyType;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -55,6 +56,11 @@ class IdWorkerApplicationTests {
         }
         System.out.println(Long.toBinaryString(start));
         System.out.println(Long.toBinaryString(end));
+    }
+
+    @Test
+    void test7() {
+        System.out.println(System.currentTimeMillis());
     }
 }
 

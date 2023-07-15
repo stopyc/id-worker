@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import shop.stopyc.strategy.AbstractIdWorker;
 import shop.stopyc.strategy.IdGenType.IdStrategyType;
 
-import java.sql.SQLData;
 
 /**
  * @program: id-worker
@@ -98,7 +97,11 @@ public class Snowflake extends AbstractIdWorker {
 
         //TODO:时钟回拨问题
         if (now < lastTimestamp) {
-            throw new RuntimeException("时间戳异常");
+            if (lastTimestamp - now < 5) {
+                now = tilNextMillis(lastTimestamp);
+            } else {
+                throw new RuntimeException("时间戳异常");
+            }
         }
 
         if (now == lastTimestamp) {
