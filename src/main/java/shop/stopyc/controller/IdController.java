@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import shop.stopyc.pojo.dto.ResultDTO;
 import shop.stopyc.strategy.IdFactory;
 
 /**
@@ -16,7 +17,7 @@ import shop.stopyc.strategy.IdFactory;
 @RequestMapping(value = "/id", produces = "application/json;charset=UTF-8")
 public class IdController {
     @GetMapping("/nextId/{strategyType}")
-    public long nextId(@PathVariable("strategyType") String strategyType) {
-        return IdFactory.nextId(strategyType);
+    public ResultDTO nextId(@PathVariable("strategyType") String strategyType) {
+        return ResultDTO.ok(IdFactory.nextId(strategyType));
     }
 }
