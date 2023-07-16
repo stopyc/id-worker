@@ -19,6 +19,7 @@ public enum ResultEnum implements StatusCode {
     RESOURCE_NOT_FOUND(404, "资源未找到"),
     PARAMETER_NOT_VALID(400, "参数不合法"),
     BUSINESS_FAIL(400, "业务失败"),
+    ABNORMAL_CLOCK_CALLBACK(50000, "异常的时钟回拨,请联系管理员"),
 
     ;
     /**

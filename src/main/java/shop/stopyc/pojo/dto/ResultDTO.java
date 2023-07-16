@@ -12,7 +12,7 @@ import static shop.stopyc.constant.ResultEnum.SUCCESS;
 
 
 /**
- * @program: chat-room
+ * @program: id-worker
  * @description:
  * @author: stop.yc
  * @create: 2022-11-08 21:07
