@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.stopyc.pojo.dto.ResultDTO;
+import shop.stopyc.pojo.exception.BusinessException;
 import shop.stopyc.strategy.IdFactory;
 
 /**
@@ -18,6 +19,9 @@ import shop.stopyc.strategy.IdFactory;
 public class IdController {
     @GetMapping("/nextId/{strategyType}")
     public ResultDTO nextId(@PathVariable("strategyType") String strategyType) {
+        if (strategyType == null || strategyType.trim().isEmpty()) {
+            throw new BusinessException("策略类型不能为空");
+        }
         return ResultDTO.ok(IdFactory.nextId(strategyType));
     }
 }

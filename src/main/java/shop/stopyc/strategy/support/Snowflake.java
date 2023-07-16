@@ -2,6 +2,7 @@ package shop.stopyc.strategy.support;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import shop.stopyc.pojo.exception.SystemException;
 import shop.stopyc.strategy.AbstractIdWorker;
 import shop.stopyc.strategy.IdGenType.IdStrategyType;
 
@@ -104,16 +105,16 @@ public class Snowflake extends AbstractIdWorker {
                     wait(offset << 1);
                     now = now();
                     if (now < lastTimestamp) {
-                        throw new RuntimeException("时间戳异常");
+                        throw new SystemException("时间戳异常");
                     }
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    throw new SystemException(e.getMessage());
                 }
             } else if (offset < 100) {
                 //如果时钟回拨在100ms以内,那么就使用历史时间戳,直接用历史时间戳生成id
                 now = lastTimestamp;
             } else {
-                throw new RuntimeException("时间戳异常");
+                throw new SystemException("时间戳异常");
             }
         }
 
@@ -125,7 +126,7 @@ public class Snowflake extends AbstractIdWorker {
                 //防止使用历史时间生成的id还溢出了.
                 long offset = lastTimestamp - now();
                 if (offset < 100) {
-                    throw new RuntimeException("时间戳异常");
+                    throw new SystemException("时间戳异常");
                 }
                 now = tilNextMillis(lastTimestamp);
             }
